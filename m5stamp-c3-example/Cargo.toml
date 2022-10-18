@@ -11,6 +11,7 @@ native = ["esp-idf-sys/native"]
 [dependencies]
 esp-idf-sys = { version = "0.31", features = ["binstart"] }
 esp-idf-svc = { version="0.42", features = ["experimental", "alloc"] }
+embedded-svc = "0.22"
 m5stamp-c3-bsc = { path = "../m5stamp-c3-bsc" }
 log = "0.4"
 anyhow = "1"

@@ -1,6 +1,8 @@
 use m5stamp_c3_bsc as bsc;
 use esp_idf_sys as _;
 use log::*;
+use m5stamp_c3_bsc::wifi::Wifi;
+use embedded_svc::sys_time::SystemTime;
 
 #[toml_cfg::toml_config]
 pub struct Config {
@@ -10,10 +12,12 @@ pub struct Config {
     wifi_psk: &'static str,
 }
 
-const GREEN: bsc::led::RGB8 = bsc::led::RGB8::new(0, 50, 0);
 const BLUE: bsc::led::RGB8 = bsc::led::RGB8::new(0, 0, 50);
 const RED: bsc::led::RGB8 = bsc::led::RGB8::new(50, 0, 0);
-const YELLOW: bsc::led::RGB8 = bsc::led::RGB8::new(50, 50, 0);
+
+fn setup_wifi(app_config: &Config) -> Option<Wifi> {
+    bsc::wifi::wifi(app_config.wifi_ssid, app_config.wifi_psk).ok()
+}
 
 fn main() -> anyhow::Result<()> {
     let app_config = CONFIG;
@@ -24,21 +28,16 @@ fn main() -> anyhow::Result<()> {
     info!("Starting");
 
     let mut led = bsc::led::WS2812RMT::new()?;
-    led.set_pixel(YELLOW)?;
 
-    let _wifi = match bsc::wifi::wifi(app_config.wifi_ssid, app_config.wifi_psk) {
-        Ok(inner) => inner,
-        Err(err) => {
-            led.set_pixel(RED)?;
-            anyhow::bail!("could not connect to Wi-Fi network: {:?}", err)
-        }
-    };
+    let wifi = setup_wifi(&app_config);
+    let has_wifi = wifi.is_some();
+    let led_color = if has_wifi { BLUE } else { RED };
+    led.set_pixel(led_color)?;
+
+    let sys_time = esp_idf_svc::systime::EspSystemTime;
 
     loop {
-        led.set_pixel(BLUE)?;
         std::thread::sleep(std::time::Duration::from_secs(1));
-        info!("Loop");
-        led.set_pixel(GREEN)?;
-        std::thread::sleep(std::time::Duration::from_secs(1));
+        info!("sys_time: {}", sys_time.now().as_secs());
     }
 }

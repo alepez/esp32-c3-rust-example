@@ -802,6 +802,7 @@ name = "m5stamp-c3-example"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "embedded-svc",
  "embuild 0.30.4",
  "esp-idf-svc",
  "esp-idf-sys",
