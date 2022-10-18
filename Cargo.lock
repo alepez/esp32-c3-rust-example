@@ -378,26 +378,6 @@ dependencies = [
 
 [[package]]
 name = "embuild"
-version = "0.28.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cf7d180dca4cbfa157261f9ebe5bcbf1006912726ec22a37c1679df59dec8756"
-dependencies = [
- "anyhow",
- "bitflags",
- "dirs",
- "log",
- "serde",
- "serde_json",
- "shlex",
- "strum 0.23.0",
- "strum_macros 0.23.1",
- "thiserror",
- "toml",
- "xmas-elf",
-]
-
-[[package]]
-name = "embuild"
 version = "0.29.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cd1dd6c90e28cfc361281a692320fcd820bcae71d327215e87c7d749bf8ddd26"
@@ -420,6 +400,20 @@ dependencies = [
  "toml",
  "which",
  "xmas-elf",
+]
+
+[[package]]
+name = "embuild"
+version = "0.30.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c6ca66d283ba92dc33ce461ba27bb5085a769dd740bad3f66e60e70926b34d05"
+dependencies = [
+ "anyhow",
+ "bitflags",
+ "filetime",
+ "log",
+ "shlex",
+ "thiserror",
 ]
 
 [[package]]
@@ -506,9 +500,9 @@ dependencies = [
 
 [[package]]
 name = "esp32c3"
-version = "0.4.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9dcac1b9f97b99652ed00d2570e3cb5c7729858d0a70b2e2b9c999a7ca087f07"
+checksum = "cc0e61897c90cfc713243af3d7fab2a7615669faf1652bd3718a1172012b1a02"
 dependencies = [
  "bare-metal 1.0.0",
  "riscv 0.8.0",
@@ -799,7 +793,7 @@ dependencies = [
  "esp32c3",
  "log",
  "rgb",
- "riscv 0.8.0",
+ "riscv 0.9.0",
  "toml-cfg",
 ]
 
@@ -808,7 +802,7 @@ name = "m5stamp-c3-example"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "embuild 0.28.5",
+ "embuild 0.30.4",
  "esp-idf-svc",
  "esp-idf-sys",
  "log",
@@ -1069,6 +1063,17 @@ name = "riscv"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5e2856a701069e2d262b264750d382407d272d5527f7a51d3777d1805b4e2d3c"
+dependencies = [
+ "bare-metal 1.0.0",
+ "bit_field",
+ "embedded-hal 0.2.7",
+]
+
+[[package]]
+name = "riscv"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "73fc4bc7113424814738fe79755a5764e392b3d4d1bc757e6aa6f61cede32095"
 dependencies = [
  "bare-metal 1.0.0",
  "bit_field",
