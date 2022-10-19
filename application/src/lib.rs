@@ -17,13 +17,8 @@ impl App {
     pub fn update(&mut self) {
         let now = self.platform.sys_time.now().as_secs();
         info!("sys_time: {}", now);
-        let color = Color {
-            r: now as u8,
-            g: now as u8,
-            b: now as u8,
-        };
-
-        self.platform.led.set_color(color);
+        let mut led_controller = LedController { led: self.platform.led.as_mut() };
+        led_controller.update(self.platform.sys_time.as_ref());
     }
 }
 
@@ -39,4 +34,20 @@ pub struct Color {
 
 pub trait Led {
     fn set_color(&mut self, color: Color);
+}
+
+struct LedController<'a> {
+    led: &'a mut dyn Led,
+}
+
+impl<'a> LedController<'a> {
+    pub fn update(&mut self, sys_time: &dyn SystemTime) {
+        let now = sys_time.now().as_secs();
+        let color = Color {
+            r: now as u8,
+            g: now as u8,
+            b: now as u8,
+        };
+        self.led.set_color(color);
+    }
 }
