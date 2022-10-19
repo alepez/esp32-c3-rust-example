@@ -33,3 +33,13 @@ impl<'a> AppBuilder<'a> {
 pub trait SystemTime {
     fn now(&self) -> core::time::Duration;
 }
+
+pub struct Color {
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+}
+
+pub trait Led {
+    fn set_color(&mut self, color: Color);
+}
