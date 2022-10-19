@@ -1,16 +1,16 @@
 use log::*;
 
-pub struct Platform<'a> {
-    pub sys_time: &'a dyn SystemTime,
-    pub led: &'a mut dyn Led,
+pub struct Platform {
+    pub sys_time: Box<dyn SystemTime>,
+    pub led: Box<dyn Led>,
 }
 
-pub struct App<'a> {
-    platform: Platform<'a>,
+pub struct App {
+    platform: Platform,
 }
 
-impl<'a> App<'a> {
-    pub fn new(platform: Platform<'a>) -> Self {
+impl App {
+    pub fn new(platform: Platform) -> Self {
         Self { platform }
     }
 

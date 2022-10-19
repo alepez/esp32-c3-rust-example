@@ -35,12 +35,9 @@ fn main() -> anyhow::Result<()> {
     let led_color = if has_wifi { BLUE } else { RED };
     led.set_pixel(led_color)?;
 
-    let sys_time = SystemTime(esp_idf_svc::systime::EspSystemTime);
-    let mut led = Led(led);
-
     let platform = application::Platform {
-        sys_time: &sys_time,
-        led: &mut led,
+        sys_time: Box::new(SystemTime(esp_idf_svc::systime::EspSystemTime)),
+        led: Box::new(Led(led)),
     };
 
     let mut app = application::App::new(platform);
