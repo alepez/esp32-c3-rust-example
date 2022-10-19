@@ -61,8 +61,8 @@ impl pal::SystemTime for SystemTime {
 
 struct Led(RefCell<bsc::led::WS2812RMT>);
 
-impl pal::Led for Led {
-    fn set_color(&self, color: pal::LedColor) {
+impl pal::RgbLed for Led {
+    fn set_color(&self, color: pal::RgbLedColor) {
         let color = rgb::RGB8 {
             r: color.r,
             g: color.g,
