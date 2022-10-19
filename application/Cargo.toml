@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 log = "0.4"
 colors-transform = "0.2.11"
+rgb = "0.8"

@@ -2,7 +2,6 @@ use std::time::Duration;
 use m5stamp_c3_bsc as bsc;
 use esp_idf_sys as _;
 use log::*;
-use application::Color;
 use m5stamp_c3_bsc::wifi::Wifi;
 
 #[toml_cfg::toml_config]
@@ -62,8 +61,8 @@ impl application::SystemTime for SystemTime {
 struct Led(bsc::led::WS2812RMT);
 
 impl application::Led for Led {
-    fn set_color(&mut self, color: Color) {
-        let color = bsc::led::RGB8::new(color.r, color.g, color.b);
-        self.0.set_pixel(color).unwrap();
+    #[allow(unused_must_use)]
+    fn set_color(&mut self, color: application::Color) {
+        self.0.set_pixel(color.into());
     }
 }

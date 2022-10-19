@@ -24,11 +24,7 @@ pub trait SystemTime {
     fn now(&self) -> core::time::Duration;
 }
 
-pub struct Color {
-    pub r: u8,
-    pub g: u8,
-    pub b: u8,
-}
+pub struct Color(rgb::RGB8);
 
 pub trait Led {
     fn set_color(&mut self, color: Color);
@@ -57,9 +53,15 @@ fn huw_to_color(hue: f32) -> Color {
     use colors_transform::Color;
     let hsl = colors_transform::Hsl::from(hue as f32, 100.0, 50.0);
     let rgb = hsl.to_rgb();
-    crate::Color {
+    crate::Color(rgb::RGB8 {
         r: rgb.get_red() as u8,
         g: rgb.get_green() as u8,
         b: rgb.get_blue() as u8,
+    })
+}
+
+impl Into<rgb::RGB8> for Color {
+    fn into(self) -> rgb::RGB8 {
+        self.0
     }
 }
