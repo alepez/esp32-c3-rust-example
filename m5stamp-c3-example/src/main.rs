@@ -1,5 +1,4 @@
 use std::time::Duration;
-use anyhow::anyhow;
 use m5stamp_c3_bsc as bsc;
 use esp_idf_sys as _;
 use log::*;
@@ -39,14 +38,15 @@ fn main() -> anyhow::Result<()> {
     let sys_time = SystemTime(esp_idf_svc::systime::EspSystemTime);
     let mut led = Led(led);
 
-    let mut app = application::AppBuilder::new()
-        .with_sys_time(&sys_time)
-        .with_led(&mut led)
-        .build().ok_or(anyhow!("Cannot build app"))?;
+    let platform = application::Platform {
+        sys_time: &sys_time,
+        led: &mut led,
+    };
+
+    let mut app = application::App::new(platform);
 
     loop {
         std::thread::sleep(std::time::Duration::from_secs(1));
-        //info!("sys_time: {}", sys_time.now().as_secs());
         app.update();
     }
 }

@@ -1,13 +1,21 @@
 use log::*;
 
+pub struct Platform<'a> {
+    pub sys_time: &'a dyn SystemTime,
+    pub led: &'a mut dyn Led,
+}
+
 pub struct App<'a> {
-    sys_time: &'a dyn SystemTime,
-    led: &'a mut dyn Led,
+    platform: Platform<'a>,
 }
 
 impl<'a> App<'a> {
+    pub fn new(platform: Platform<'a>) -> Self {
+        Self { platform }
+    }
+
     pub fn update(&mut self) {
-        let now = self.sys_time.now().as_secs();
+        let now = self.platform.sys_time.now().as_secs();
         info!("sys_time: {}", now);
         let color = Color {
             r: now as u8,
@@ -15,38 +23,7 @@ impl<'a> App<'a> {
             b: now as u8,
         };
 
-        self.led.set_color(color);
-    }
-}
-
-#[derive(Default)]
-pub struct AppBuilder<'a> {
-    sys_time: Option<&'a dyn SystemTime>,
-    led: Option<&'a mut dyn Led>,
-}
-
-impl<'a> AppBuilder<'a> {
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    pub fn build(self) -> Option<App<'a>> {
-        let app = App {
-            sys_time: self.sys_time?,
-            led: self.led?,
-        };
-
-        Some(app)
-    }
-
-    pub fn with_sys_time(mut self, sys_time: &'a dyn SystemTime) -> Self {
-        self.sys_time = Some(sys_time);
-        self
-    }
-
-    pub fn with_led(mut self, led: &'a mut dyn Led) -> Self {
-        self.led = Some(led);
-        self
+        self.platform.led.set_color(color);
     }
 }
 
