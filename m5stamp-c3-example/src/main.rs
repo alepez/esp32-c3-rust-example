@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use std::time::Duration;
 use m5stamp_c3_bsc as bsc;
 use esp_idf_sys as _;
@@ -34,12 +35,12 @@ fn main() -> anyhow::Result<()> {
     let led_color = if has_wifi { BLUE } else { RED };
     led.set_pixel(led_color)?;
 
-    let platform = application::Platform {
+    let platform = Box::new(application::Platform {
         sys_time: Box::new(SystemTime(esp_idf_svc::systime::EspSystemTime)),
-        led: Box::new(Led(led)),
-    };
+        led: Box::new(Led(RefCell::new(led))),
+    });
 
-    let mut app = application::App::new(platform);
+    let mut app = application::App::new(&platform);
 
     let period = Duration::from_millis(20);
 
@@ -58,11 +59,10 @@ impl application::SystemTime for SystemTime {
     }
 }
 
-struct Led(bsc::led::WS2812RMT);
+struct Led(RefCell<bsc::led::WS2812RMT>);
 
 impl application::Led for Led {
-    #[allow(unused_must_use)]
-    fn set_color(&mut self, color: application::Color) {
-        self.0.set_pixel(color.into());
+    fn set_color(&self, color: application::Color) {
+        self.0.borrow_mut().set_pixel(color.into()).ok();
     }
 }

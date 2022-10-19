@@ -5,40 +5,48 @@ pub struct Platform {
     pub led: Box<dyn Led>,
 }
 
-pub struct App {
-    platform: Platform,
+#[allow(dead_code)]
+pub struct App<'a> {
+    platform: &'a Platform,
+    led_controller: LedController<'a>,
 }
 
-impl App {
-    pub fn new(platform: Platform) -> Self {
-        Self { platform }
+impl<'a> App<'a> {
+    pub fn new(platform: &'a Platform) -> Self {
+        let led_controller = LedController { platform };
+        let app = Self {
+            platform,
+            led_controller,
+        };
+
+        app
     }
 
     pub fn update(&mut self) {
-        let mut led_controller = LedController { led: self.platform.led.as_mut() };
-        led_controller.update(self.platform.sys_time.as_ref());
+        self.led_controller.update();
     }
 }
 
 pub trait SystemTime {
-    fn now(&self) -> core::time::Duration;
+    fn now(&self) -> Duration;
 }
 
 pub struct Color(rgb::RGB8);
 
 pub trait Led {
-    fn set_color(&mut self, color: Color);
+    fn set_color(&self, color: Color);
 }
 
 struct LedController<'a> {
-    led: &'a mut dyn Led,
+    platform: &'a Platform,
 }
 
 impl<'a> LedController<'a> {
-    pub fn update(&mut self, sys_time: &dyn SystemTime) {
-        let hue = time_to_hue(sys_time.now(), Duration::from_secs(10));
+    pub fn update(&mut self) {
+        let now = self.platform.sys_time.now();
+        let hue = time_to_hue(now, Duration::from_secs(10));
         let color = huw_to_color(hue);
-        self.led.set_color(color);
+        self.platform.led.set_color(color);
     }
 }
 
