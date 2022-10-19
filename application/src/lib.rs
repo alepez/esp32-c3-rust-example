@@ -47,5 +47,9 @@ fn huw_to_color(hue: f32) -> LedColor {
     use colors_transform::Color;
     let hsl = colors_transform::Hsl::from(hue as f32, 100.0, 50.0);
     let rgb = hsl.to_rgb();
-    LedColor::from(rgb)
+    LedColor {
+        r: rgb.get_red() as u8,
+        g: rgb.get_green() as u8,
+        b: rgb.get_blue() as u8,
+    }
 }

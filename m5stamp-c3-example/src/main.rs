@@ -63,6 +63,11 @@ struct Led(RefCell<bsc::led::WS2812RMT>);
 
 impl pal::Led for Led {
     fn set_color(&self, color: pal::LedColor) {
-        self.0.borrow_mut().set_pixel(color.into()).ok();
+        let color = rgb::RGB8 {
+            r: color.r,
+            g: color.g,
+            b: color.b,
+        };
+        self.0.borrow_mut().set_pixel(color).ok();
     }
 }

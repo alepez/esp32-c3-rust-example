@@ -18,6 +18,7 @@ log = "0.4"
 anyhow = "1"
 toml-cfg = "0.1"
 pal = { path = "../pal" }
+rgb = "0.8"
 
 [build-dependencies]
 embuild = "0.30"
