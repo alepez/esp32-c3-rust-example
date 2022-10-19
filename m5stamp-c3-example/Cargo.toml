@@ -13,6 +13,7 @@ esp-idf-sys = { version = "0.31", features = ["binstart"] }
 esp-idf-svc = { version="0.42", features = ["experimental", "alloc"] }
 embedded-svc = "0.22"
 m5stamp-c3-bsc = { path = "../m5stamp-c3-bsc" }
+m5stamp-c3-pal = { path = "../m5stamp-c3-pal" }
 application = { path = "../application" }
 log = "0.4"
 anyhow = "1"
