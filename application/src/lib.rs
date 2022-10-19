@@ -42,11 +42,16 @@ struct LedController<'a> {
 
 impl<'a> LedController<'a> {
     pub fn update(&mut self, sys_time: &dyn SystemTime) {
+        use colors_transform::Color;
+
         let now = sys_time.now().as_secs();
-        let color = Color {
-            r: now as u8,
-            g: now as u8,
-            b: now as u8,
+        let hue = now % 360;
+        let hsl = colors_transform::Hsl::from(hue as f32, 100.0, 50.0);
+        let rgb = hsl.to_rgb();
+        let color = crate::Color {
+            r: rgb.get_red() as u8,
+            g: rgb.get_green() as u8,
+            b: rgb.get_blue() as u8,
         };
         self.led.set_color(color);
     }
