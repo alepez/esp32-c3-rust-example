@@ -1,4 +1,4 @@
-use log::*;
+use std::time::Duration;
 
 pub struct Platform {
     pub sys_time: Box<dyn SystemTime>,
@@ -15,8 +15,6 @@ impl App {
     }
 
     pub fn update(&mut self) {
-        let now = self.platform.sys_time.now().as_secs();
-        info!("sys_time: {}", now);
         let mut led_controller = LedController { led: self.platform.led.as_mut() };
         led_controller.update(self.platform.sys_time.as_ref());
     }
@@ -42,17 +40,26 @@ struct LedController<'a> {
 
 impl<'a> LedController<'a> {
     pub fn update(&mut self, sys_time: &dyn SystemTime) {
-        use colors_transform::Color;
-
-        let now = sys_time.now().as_secs();
-        let hue = now % 360;
-        let hsl = colors_transform::Hsl::from(hue as f32, 100.0, 50.0);
-        let rgb = hsl.to_rgb();
-        let color = crate::Color {
-            r: rgb.get_red() as u8,
-            g: rgb.get_green() as u8,
-            b: rgb.get_blue() as u8,
-        };
+        let hue = time_to_hue(sys_time.now(), Duration::from_secs(10));
+        let color = huw_to_color(hue);
         self.led.set_color(color);
+    }
+}
+
+fn time_to_hue(time: Duration, period: Duration) -> f32 {
+    let time = time.as_millis() as f32;
+    let period = period.as_millis() as f32;
+    let normalized = (time % period) / period;
+    normalized * 360.0
+}
+
+fn huw_to_color(hue: f32) -> Color {
+    use colors_transform::Color;
+    let hsl = colors_transform::Hsl::from(hue as f32, 100.0, 50.0);
+    let rgb = hsl.to_rgb();
+    crate::Color {
+        r: rgb.get_red() as u8,
+        g: rgb.get_green() as u8,
+        b: rgb.get_blue() as u8,
     }
 }

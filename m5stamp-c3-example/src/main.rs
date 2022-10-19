@@ -42,8 +42,10 @@ fn main() -> anyhow::Result<()> {
 
     let mut app = application::App::new(platform);
 
+    let period = Duration::from_millis(20);
+
     loop {
-        std::thread::sleep(std::time::Duration::from_secs(1));
+        std::thread::sleep(period);
         app.update();
     }
 }
