@@ -35,7 +35,7 @@ fn main() -> anyhow::Result<()> {
     let led_color = if has_wifi { BLUE } else { RED };
     led.set_pixel(led_color)?;
 
-    let platform = Box::new(application::Platform {
+    let platform = Box::new(pal::Platform {
         sys_time: Box::new(SystemTime(esp_idf_svc::systime::EspSystemTime)),
         led: Box::new(Led(RefCell::new(led))),
     });
@@ -52,7 +52,7 @@ fn main() -> anyhow::Result<()> {
 
 struct SystemTime(esp_idf_svc::systime::EspSystemTime);
 
-impl application::SystemTime for SystemTime {
+impl pal::SystemTime for SystemTime {
     fn now(&self) -> Duration {
         use embedded_svc::sys_time::SystemTime;
         self.0.now()
@@ -61,8 +61,8 @@ impl application::SystemTime for SystemTime {
 
 struct Led(RefCell<bsc::led::WS2812RMT>);
 
-impl application::Led for Led {
-    fn set_color(&self, color: application::Color) {
+impl pal::Led for Led {
+    fn set_color(&self, color: pal::LedColor) {
         self.0.borrow_mut().set_pixel(color.into()).ok();
     }
 }

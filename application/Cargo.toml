@@ -7,3 +7,4 @@ edition = "2021"
 log = "0.4"
 colors-transform = "0.2.11"
 rgb = "0.8"
+pal = { path = "../pal" }
