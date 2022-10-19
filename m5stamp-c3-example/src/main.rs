@@ -35,10 +35,10 @@ fn main() -> anyhow::Result<()> {
     let led_color = if has_wifi { BLUE } else { RED };
     led.set_pixel(led_color)?;
 
-    let platform = Box::new(pal::Platform {
-        sys_time: Box::new(SystemTime(esp_idf_svc::systime::EspSystemTime)),
-        led: Box::new(Led(RefCell::new(led))),
-    });
+    let platform = Platform {
+        sys_time: SystemTime(esp_idf_svc::systime::EspSystemTime),
+        led: RgbLed(RefCell::new(led)),
+    };
 
     let mut app = application::App::new(&platform);
 
@@ -59,9 +59,9 @@ impl pal::SystemTime for SystemTime {
     }
 }
 
-struct Led(RefCell<bsc::led::WS2812RMT>);
+struct RgbLed(RefCell<bsc::led::WS2812RMT>);
 
-impl pal::RgbLed for Led {
+impl pal::RgbLed for RgbLed {
     fn set_color(&self, color: pal::RgbLedColor) {
         let color = rgb::RGB8 {
             r: color.r,
@@ -69,5 +69,20 @@ impl pal::RgbLed for Led {
             b: color.b,
         };
         self.0.borrow_mut().set_pixel(color).ok();
+    }
+}
+
+struct Platform {
+    pub sys_time: SystemTime,
+    pub led: RgbLed,
+}
+
+impl pal::Platform for Platform {
+    fn sys_time(&self) -> &dyn pal::SystemTime {
+        &self.sys_time
+    }
+
+    fn led(&self) -> &dyn pal::RgbLed {
+        &self.led
     }
 }

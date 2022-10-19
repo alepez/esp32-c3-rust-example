@@ -3,12 +3,12 @@ use pal::{Platform, RgbLedColor};
 
 #[allow(dead_code)]
 pub struct App<'a> {
-    platform: &'a Platform,
+    platform: &'a dyn Platform,
     led_controller: LedController<'a>,
 }
 
 impl<'a> App<'a> {
-    pub fn new(platform: &'a Platform) -> Self {
+    pub fn new(platform: &'a dyn Platform) -> Self {
         let led_controller = LedController { platform };
         let app = Self {
             platform,
@@ -24,15 +24,15 @@ impl<'a> App<'a> {
 }
 
 struct LedController<'a> {
-    platform: &'a Platform,
+    platform: &'a dyn Platform,
 }
 
 impl<'a> LedController<'a> {
     pub fn update(&mut self) {
-        let now = self.platform.sys_time.now();
+        let now = self.platform.sys_time().now();
         let hue = time_to_hue(now, Duration::from_secs(10));
         let color = huw_to_color(hue);
-        self.platform.led.set_color(color);
+        self.platform.led().set_color(color);
     }
 }
 

@@ -1,6 +1,6 @@
-pub struct Platform {
-    pub sys_time: Box<dyn SystemTime>,
-    pub led: Box<dyn RgbLed>,
+pub trait Platform {
+    fn sys_time(&self) -> &dyn SystemTime;
+    fn led(&self) -> &dyn RgbLed;
 }
 
 pub trait SystemTime {
