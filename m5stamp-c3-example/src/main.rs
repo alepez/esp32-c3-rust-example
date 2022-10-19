@@ -1,8 +1,8 @@
+use std::time::Duration;
 use m5stamp_c3_bsc as bsc;
 use esp_idf_sys as _;
 use log::*;
 use m5stamp_c3_bsc::wifi::Wifi;
-use embedded_svc::sys_time::SystemTime;
 
 #[toml_cfg::toml_config]
 pub struct Config {
@@ -34,10 +34,24 @@ fn main() -> anyhow::Result<()> {
     let led_color = if has_wifi { BLUE } else { RED };
     led.set_pixel(led_color)?;
 
-    let sys_time = esp_idf_svc::systime::EspSystemTime;
+    let sys_time = SystemTime(esp_idf_svc::systime::EspSystemTime);
+
+    let mut app = application::AppBuilder::new()
+        .with_sys_time(&sys_time)
+        .build();
 
     loop {
         std::thread::sleep(std::time::Duration::from_secs(1));
-        info!("sys_time: {}", sys_time.now().as_secs());
+        //info!("sys_time: {}", sys_time.now().as_secs());
+        app.update();
+    }
+}
+
+struct SystemTime(esp_idf_svc::systime::EspSystemTime);
+
+impl application::SystemTime for SystemTime {
+    fn now(&self) -> Duration {
+        use embedded_svc::sys_time::SystemTime;
+        self.0.now()
     }
 }

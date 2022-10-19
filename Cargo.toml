@@ -4,6 +4,7 @@ resolver = "2"
 members = [
     "m5stamp-c3-example",
     "m5stamp-c3-bsc",
+    "application",
 ]
 
 [profile.release]
