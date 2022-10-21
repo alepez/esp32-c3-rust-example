@@ -1,8 +1,8 @@
 use std::time::Duration;
 use esp_idf_sys as _;
 use log::*;
-use m5stamp_c3_bsc::wifi::Wifi;
-use m5stamp_c3_pal::Platform;
+use pal::Platform;
+use pal::WifiConfig;
 
 #[toml_cfg::toml_config]
 pub struct Config {
@@ -10,10 +10,6 @@ pub struct Config {
     wifi_ssid: &'static str,
     #[default("")]
     wifi_psk: &'static str,
-}
-
-fn setup_wifi(app_config: &Config) -> Option<Wifi> {
-    m5stamp_c3_bsc::wifi::wifi(app_config.wifi_ssid, app_config.wifi_psk).ok()
 }
 
 fn main() -> anyhow::Result<()> {
@@ -24,9 +20,13 @@ fn main() -> anyhow::Result<()> {
 
     info!("Starting");
 
-    let _wifi = setup_wifi(&app_config);
+    let platform = m5stamp_c3_pal::Platform::new();
 
-    let platform = Platform::new();
+    platform.wifi().setup(&WifiConfig {
+        ssid: app_config.wifi_ssid.to_string(),
+        psk: app_config.wifi_psk.to_string(),
+    });
+
     let mut app = application::App::new(&platform);
     let period = Duration::from_millis(20);
 

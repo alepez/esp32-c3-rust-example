@@ -20,7 +20,7 @@ pub trait RgbLed {
 
 pub struct WifiConfig {
     pub ssid: String,
-    pub password: String,
+    pub psk: String,
 }
 
 pub trait Wifi {

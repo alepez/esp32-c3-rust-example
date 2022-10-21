@@ -839,6 +839,7 @@ dependencies = [
  "embedded-svc",
  "esp-idf-svc",
  "esp-idf-sys",
+ "log",
  "m5stamp-c3-bsc",
  "pal",
 ]
