@@ -9,18 +9,15 @@ default = ["native"]
 native = ["esp-idf-sys/native"]
 
 [dependencies]
-esp-idf-sys = { version = "0.31", features = ["binstart"] }
-esp-idf-svc = { version="0.42", features = ["experimental", "alloc"] }
-embedded-svc = "0.22"
-m5stamp-c3-bsc = { path = "../m5stamp-c3-bsc" }
-m5stamp-c3-pal = { path = "../m5stamp-c3-pal" }
-application = { path = "../application" }
-log = "0.4"
 anyhow = "1"
-toml-cfg = "0.1"
+application = { path = "../application" }
+esp-idf-svc = { version="0.42", features = ["experimental", "alloc"] }
+esp-idf-sys = { version = "0.31", features = ["binstart"] }
+log = "0.4"
+m5stamp-c3-pal = { path = "../m5stamp-c3-pal" }
 pal = { path = "../pal" }
-rgb = "0.8"
+toml-cfg = "0.1"
 
 [build-dependencies]
-embuild = "0.30"
 anyhow = "1"
+embuild = "0.30"

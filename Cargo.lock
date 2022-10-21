@@ -222,7 +222,7 @@ dependencies = [
  "bare-metal 1.0.0",
  "cfg-if",
  "cortex-m",
- "riscv 0.7.0",
+ "riscv",
 ]
 
 [[package]]
@@ -515,17 +515,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "esp32c3"
-version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc0e61897c90cfc713243af3d7fab2a7615669faf1652bd3718a1172012b1a02"
-dependencies = [
- "bare-metal 1.0.0",
- "riscv 0.8.0",
- "vcell",
-]
-
-[[package]]
 name = "fastrand"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -798,36 +787,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "m5stamp-c3-bsc"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "embedded-svc",
- "esp-idf-hal",
- "esp-idf-svc",
- "esp-idf-sys",
- "esp32c3",
- "log",
- "rgb",
- "riscv 0.9.0",
- "toml-cfg",
-]
-
-[[package]]
 name = "m5stamp-c3-example"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "application",
- "embedded-svc",
  "embuild 0.30.4",
  "esp-idf-svc",
  "esp-idf-sys",
  "log",
- "m5stamp-c3-bsc",
  "m5stamp-c3-pal",
  "pal",
- "rgb",
  "toml-cfg",
 ]
 
@@ -840,7 +810,6 @@ dependencies = [
  "esp-idf-svc",
  "esp-idf-sys",
  "log",
- "m5stamp-c3-bsc",
  "pal",
 ]
 
@@ -939,10 +908,6 @@ checksum = "e82dad04139b71a90c080c8463fe0dc7902db5192d939bd0950f074d014339e1"
 [[package]]
 name = "pal"
 version = "0.1.0"
-dependencies = [
- "colors-transform",
- "rgb",
-]
 
 [[package]]
 name = "paste"
@@ -1098,28 +1063,6 @@ dependencies = [
  "bare-metal 1.0.0",
  "bit_field",
  "riscv-target",
-]
-
-[[package]]
-name = "riscv"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e2856a701069e2d262b264750d382407d272d5527f7a51d3777d1805b4e2d3c"
-dependencies = [
- "bare-metal 1.0.0",
- "bit_field",
- "embedded-hal 0.2.7",
-]
-
-[[package]]
-name = "riscv"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73fc4bc7113424814738fe79755a5764e392b3d4d1bc757e6aa6f61cede32095"
-dependencies = [
- "bare-metal 1.0.0",
- "bit_field",
- "embedded-hal 0.2.7",
 ]
 
 [[package]]
