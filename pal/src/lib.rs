@@ -1,6 +1,7 @@
 pub trait Platform {
     fn sys_time(&self) -> &dyn SystemTime;
     fn led(&self) -> &dyn RgbLed;
+    fn wifi(&self) -> &dyn Wifi;
 }
 
 pub trait SystemTime {
@@ -15,4 +16,13 @@ pub struct RgbLedColor {
 
 pub trait RgbLed {
     fn set_color(&self, color: RgbLedColor);
+}
+
+pub struct WifiConfig {
+    pub ssid: String,
+    pub password: String,
+}
+
+pub trait Wifi {
+    fn setup(&self, config: &WifiConfig);
 }
