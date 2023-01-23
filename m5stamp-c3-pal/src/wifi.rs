@@ -3,7 +3,7 @@ use std::cell::RefCell;
 mod esp_wifi;
 
 #[derive(Default)]
-pub struct Wifi(RefCell<Option<esp_wifi::Wifi>>);
+pub struct Wifi(RefCell<Option<esp_wifi::Wifi<'static>>>);
 
 impl Wifi {
     pub fn new() -> Self {
@@ -16,3 +16,4 @@ impl pal::Wifi for Wifi {
         *self.0.borrow_mut() = esp_wifi::wifi(&config.ssid, &config.psk).ok();
     }
 }
+

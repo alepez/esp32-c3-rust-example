@@ -11,8 +11,8 @@ native = ["esp-idf-sys/native"]
 [dependencies]
 anyhow = "1"
 application = { path = "../application" }
-esp-idf-svc = { version="0.42", features = ["experimental", "alloc"] }
-esp-idf-sys = { version = "0.31", features = ["binstart"] }
+esp-idf-svc = { version="0.45", features = ["experimental", "alloc"] }
+esp-idf-sys = { version = "0.32", features = ["binstart"] }
 log = "0.4"
 m5stamp-c3-pal = { path = "../m5stamp-c3-pal" }
 pal = { path = "../pal" }

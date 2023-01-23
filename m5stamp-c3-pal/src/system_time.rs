@@ -10,7 +10,7 @@ impl SystemTime {
 
 impl pal::SystemTime for SystemTime {
     fn now(&self) -> Duration {
-        use embedded_svc::sys_time::SystemTime;
         self.0.now()
     }
 }
+
