@@ -15,8 +15,8 @@ pub struct Wifi {
 }
 
 pub struct WifiConfig<'a> {
-    ssid: &'a str,
-    password: &'a str,
+    pub(crate) ssid: &'a str,
+    pub(crate) password: &'a str,
 }
 
 impl WifiConfig<'_> {

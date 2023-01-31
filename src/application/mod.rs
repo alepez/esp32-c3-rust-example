@@ -3,7 +3,6 @@ use std::time::Duration;
 use crate::drivers::rgb_led::{RgbLed, RgbLedColor};
 use crate::platform::Platform;
 
-#[allow(dead_code)]
 pub struct App<'a> {
     led_controller: LedController<'a>,
 }

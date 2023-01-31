@@ -11,11 +11,16 @@ fn main() -> anyhow::Result<()> {
     esp_idf_svc::log::EspLogger::initialize_default();
 
     let config = Config::new();
+
+    log::info!("Create platform");
     let platform = Platform::new(&config);
+
+    log::info!("Create app");
     let mut app = App::new(&platform);
 
     let period = Duration::from_millis(20);
 
+    log::info!("Start loop");
     loop {
         std::thread::sleep(period);
         app.update();
