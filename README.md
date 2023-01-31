@@ -6,8 +6,8 @@ You need nightly Rust and `espflash`. To install both of them, just use commands
 below:
 
 ```shell
-rustup install nightly-2022-10-18
-rustup component add rust-src --toolchain nightly-2022-10-18
+rustup install nightly-2023-01-22
+rustup component add rust-src --toolchain nightly-2023-01-22
 cargo install cargo-espflash ldproxy
 ```
 
