@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use esp_idf_sys as _;
 use log::*;
-use m5stamp_c3_pal::Platform;
+use m5stamp_c3_pal::RgbLed;
 
 mod application;
 mod esp_wifi;
@@ -23,11 +23,11 @@ fn main() -> anyhow::Result<()> {
 
     info!("Starting");
 
-    let platform = Platform::new();
+    let wifi = esp_wifi::wifi(&app_config.wifi_ssid, &app_config.wifi_psk).expect("Cannot setup wifi");
 
-    esp_wifi::wifi(&app_config.wifi_ssid, &app_config.wifi_psk).expect("Cannot setup wifi");
+    let led = RgbLed::new();
 
-    let mut app = application::App::new(&platform);
+    let mut app = application::App::new(&led);
     let period = Duration::from_millis(20);
 
     loop {
