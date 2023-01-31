@@ -7,9 +7,9 @@ use crate::rbg_led::RgbLed;
 use crate::wifi::Wifi;
 
 pub struct Platform {
-    sys_time: SystemTime,
-    led: RgbLed,
-    wifi: Wifi,
+    pub sys_time: SystemTime,
+    pub led: RgbLed,
+    pub wifi: Wifi,
 }
 
 impl Platform {
@@ -22,14 +22,13 @@ impl Platform {
     }
 }
 
-impl pal::Platform for Platform {
-    fn sys_time(&self) -> &dyn pal::SystemTime {
-        &self.sys_time
-    }
+pub struct RgbLedColor {
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+}
 
-    fn led(&self) -> &dyn pal::RgbLed {
-        &self.led
-    }
-
-    fn wifi(&self) -> &dyn pal::Wifi { &self.wifi }
+pub struct WifiConfig {
+    pub ssid: String,
+    pub psk: String,
 }

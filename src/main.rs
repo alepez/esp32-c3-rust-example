@@ -2,8 +2,8 @@ use std::time::Duration;
 
 use esp_idf_sys as _;
 use log::*;
-use pal::Platform;
-use pal::WifiConfig;
+use m5stamp_c3_pal::Platform;
+use m5stamp_c3_pal::WifiConfig;
 
 mod application;
 
@@ -23,9 +23,9 @@ fn main() -> anyhow::Result<()> {
 
     info!("Starting");
 
-    let platform = m5stamp_c3_pal::Platform::new();
+    let platform = Platform::new();
 
-    platform.wifi().setup(&WifiConfig {
+    platform.wifi.setup(&WifiConfig {
         ssid: app_config.wifi_ssid.to_string(),
         psk: app_config.wifi_psk.to_string(),
     });

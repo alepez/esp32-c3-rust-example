@@ -1,14 +1,16 @@
 use std::time::Duration;
-use pal::{Platform, RgbLedColor};
+
+use m5stamp_c3_pal::Platform;
+use m5stamp_c3_pal::RgbLedColor;
 
 #[allow(dead_code)]
 pub struct App<'a> {
-    platform: &'a dyn Platform,
+    platform: &'a Platform,
     led_controller: LedController<'a>,
 }
 
 impl<'a> App<'a> {
-    pub fn new(platform: &'a dyn Platform) -> Self {
+    pub fn new(platform: &'a Platform) -> Self {
         let led_controller = LedController { platform };
         let app = Self {
             platform,
@@ -24,15 +26,15 @@ impl<'a> App<'a> {
 }
 
 struct LedController<'a> {
-    platform: &'a dyn Platform,
+    platform: &'a Platform,
 }
 
 impl<'a> LedController<'a> {
     pub fn update(&mut self) {
-        let now = self.platform.sys_time().now();
+        let now = self.platform.sys_time.now();
         let hue = time_to_hue(now, Duration::from_secs(10));
         let color = huw_to_color(hue);
-        self.platform.led().set_color(color);
+        self.platform.led.set_color(color);
     }
 }
 

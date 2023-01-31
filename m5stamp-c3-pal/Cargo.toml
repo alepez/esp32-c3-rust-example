@@ -10,4 +10,3 @@ esp-idf-svc = { version= "0.45", features = ["experimental", "alloc"] }
 esp-idf-sys = { version = "0.32" }
 esp-idf-hal = { version = "0.40" }
 log = "0.4"
-pal = { path = "../pal" }

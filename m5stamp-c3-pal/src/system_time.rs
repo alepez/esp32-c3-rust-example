@@ -6,11 +6,8 @@ impl SystemTime {
     pub fn new() -> Self {
         Self(esp_idf_svc::systime::EspSystemTime)
     }
-}
 
-impl pal::SystemTime for SystemTime {
-    fn now(&self) -> Duration {
+    pub fn now(&self) -> Duration {
         self.0.now()
     }
 }
-
