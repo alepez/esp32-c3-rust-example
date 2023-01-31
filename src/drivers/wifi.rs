@@ -10,9 +10,8 @@ use esp_idf_svc::netif::{EspNetif, EspNetifWait};
 use esp_idf_svc::nvs::EspDefaultNvsPartition;
 use esp_idf_svc::wifi::{EspWifi, WifiWait};
 
-#[allow(unused)]
 pub struct Wifi<'a> {
-    esp_wifi: EspWifi<'a>,
+    _esp_wifi: EspWifi<'a>,
 }
 
 impl<'a> Wifi<'a> {
@@ -88,7 +87,7 @@ impl<'a> Wifi<'a> {
 
         log::info!("Wifi DHCP info: {:?}", ip_info);
 
-        let wifi = Wifi { esp_wifi: wifi };
+        let wifi = Wifi { _esp_wifi: wifi };
 
         Ok(wifi)
     }
