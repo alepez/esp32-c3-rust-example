@@ -926,7 +926,9 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "colors-transform",
+ "embedded-svc",
  "embuild",
+ "esp-idf-hal",
  "esp-idf-svc",
  "esp-idf-sys",
  "log",

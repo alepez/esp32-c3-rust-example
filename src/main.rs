@@ -3,9 +3,9 @@ use std::time::Duration;
 use esp_idf_sys as _;
 use log::*;
 use m5stamp_c3_pal::Platform;
-use m5stamp_c3_pal::WifiConfig;
 
 mod application;
+mod esp_wifi;
 
 #[toml_cfg::toml_config]
 pub struct Config {
@@ -25,10 +25,7 @@ fn main() -> anyhow::Result<()> {
 
     let platform = Platform::new();
 
-    platform.wifi.setup(&WifiConfig {
-        ssid: app_config.wifi_ssid.to_string(),
-        psk: app_config.wifi_psk.to_string(),
-    });
+    esp_wifi::wifi(&app_config.wifi_ssid, &app_config.wifi_psk).expect("Cannot setup wifi");
 
     let mut app = application::App::new(&platform);
     let period = Duration::from_millis(20);
