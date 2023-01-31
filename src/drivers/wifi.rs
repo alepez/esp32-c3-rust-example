@@ -10,12 +10,12 @@ use esp_idf_svc::netif::{EspNetif, EspNetifWait};
 use esp_idf_svc::nvs::EspDefaultNvsPartition;
 use esp_idf_svc::wifi::{EspWifi, WifiWait};
 
-pub struct Wifi<'a> {
-    _esp_wifi: EspWifi<'a>,
+pub struct Wifi {
+    _esp_wifi: EspWifi<'static>,
 }
 
-impl<'a> Wifi<'a> {
-    pub fn new(ssid: &str, psk: &str) -> anyhow::Result<Wifi<'static>> {
+impl Wifi {
+    pub fn new(ssid: &str, psk: &str) -> anyhow::Result<Wifi> {
         let mut auth_method = AuthMethod::WPA2Personal;
 
         if ssid.is_empty() {
