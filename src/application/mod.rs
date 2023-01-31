@@ -1,5 +1,7 @@
 use std::time::Duration;
+
 use crate::drivers::rgb_led::{RgbLed, RgbLedColor};
+use crate::platform::Platform;
 
 #[allow(dead_code)]
 pub struct App<'a> {
@@ -7,11 +9,11 @@ pub struct App<'a> {
 }
 
 impl<'a> App<'a> {
-    pub fn new(led: &'a RgbLed) -> Self {
-        let led_controller = LedController { led };
-        let app = Self {
-            led_controller,
+    pub fn new(platform: &'a Platform) -> Self {
+        let led_controller = LedController {
+            led: &platform.rgb_led,
         };
+        let app = Self { led_controller };
 
         app
     }

@@ -1,8 +1,8 @@
+use std::cell::RefCell;
 use std::{
     ffi::c_void,
     ptr::{null, null_mut},
 };
-use std::cell::RefCell;
 
 use esp_idf_sys::{
     esp, rmt_config, rmt_config_t, rmt_config_t__bindgen_ty_1, rmt_driver_install,
@@ -25,7 +25,10 @@ impl RgbLed {
     }
 
     pub fn set_color(&self, color: RgbLedColor) {
-        self.0.borrow_mut().set_color(color.r, color.g, color.b).ok();
+        self.0
+            .borrow_mut()
+            .set_color(color.r, color.g, color.b)
+            .ok();
     }
 }
 

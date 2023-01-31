@@ -28,11 +28,11 @@ impl WifiConfig<'_> {
     }
 }
 
-impl TryInto<Configuration> for WifiConfig<'_> {
+impl TryInto<Configuration> for &WifiConfig<'_> {
     type Error = anyhow::Error;
 
     fn try_into(self) -> anyhow::Result<Configuration> {
-        let Self { ssid, password } = self;
+        let &WifiConfig { ssid, password } = self;
 
         let mut auth_method = AuthMethod::WPA2Personal;
 
@@ -58,7 +58,7 @@ impl TryInto<Configuration> for WifiConfig<'_> {
 }
 
 impl Wifi {
-    pub fn new(config: WifiConfig) -> anyhow::Result<Wifi> {
+    pub fn new(config: &WifiConfig) -> anyhow::Result<Wifi> {
         let peripherals = Peripherals::take().unwrap();
         let sys_loop = EspSystemEventLoop::take().unwrap();
         let nvs = EspDefaultNvsPartition::take().unwrap();
