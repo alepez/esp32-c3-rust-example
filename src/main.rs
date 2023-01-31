@@ -3,11 +3,9 @@ use std::time::Duration;
 use esp_idf_sys as _;
 use log::*;
 
-use crate::drivers::rgb_led::RgbLed;
-use crate::drivers::wifi::Wifi;
-
-mod application;
-mod drivers;
+use m5stamp_c3_example::application::App;
+use m5stamp_c3_example::drivers::rgb_led::RgbLed;
+use m5stamp_c3_example::drivers::wifi::Wifi;
 
 #[toml_cfg::toml_config]
 pub struct Config {
@@ -29,7 +27,7 @@ fn main() -> anyhow::Result<()> {
 
     let led = RgbLed::new();
 
-    let mut app = application::App::new(&led);
+    let mut app = App::new(&led);
     let period = Duration::from_millis(20);
 
     loop {
