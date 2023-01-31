@@ -9,7 +9,6 @@ use esp_idf_svc::eventloop::EspSystemEventLoop;
 use esp_idf_svc::netif::{EspNetif, EspNetifWait};
 use esp_idf_svc::nvs::EspDefaultNvsPartition;
 use esp_idf_svc::wifi::{EspWifi, WifiWait};
-use log::info;
 
 #[allow(unused)]
 pub struct Wifi<'a> {
@@ -17,15 +16,15 @@ pub struct Wifi<'a> {
 }
 
 pub fn wifi(ssid: &str, psk: &str) -> anyhow::Result<Wifi<'static>> {
-    let mut auth_method = AuthMethod::WPA2Personal; // Todo: add this setting - router dependent
+    let mut auth_method = AuthMethod::WPA2Personal;
 
     if ssid.is_empty() {
-        anyhow::bail!("missing WiFi name")
+        bail!("missing WiFi name")
     }
 
     if psk.is_empty() {
         auth_method = AuthMethod::None;
-        info!("Wifi password is empty");
+        log::info!("Wifi password is empty");
     }
 
     let peripherals = Peripherals::take().unwrap();
@@ -34,48 +33,39 @@ pub fn wifi(ssid: &str, psk: &str) -> anyhow::Result<Wifi<'static>> {
 
     let mut wifi = EspWifi::new(peripherals.modem, sys_loop.clone(), Some(nvs))?;
 
-    info!("Searching for Wifi network {}", ssid);
+    log::info!("Searching for Wifi network {}", ssid);
 
     let ap_infos = wifi.scan()?;
 
     let ours = ap_infos.into_iter().find(|a| a.ssid == ssid);
 
-    let channel = if let Some(ours) = ours {
-        info!(
-            "Found configured access point {} on channel {}",
-            ssid, ours.channel
-        );
-        Some(ours.channel)
-    } else {
-        info!(
-            "Configured access point {} not found during scanning, will go with unknown channel",
-            ssid
-        );
-        None
-    };
+    let channel = ours.map(|x| x.channel);
 
-    info!("setting Wifi configuration");
-    wifi.set_configuration(&Configuration::Client(ClientConfiguration {
+    log::info!("setting Wifi configuration");
+
+    let config = ClientConfiguration {
         ssid: ssid.into(),
         password: psk.into(),
         channel,
         auth_method,
         ..Default::default()
-    }))?;
+    };
 
-    info!("getting Wifi status");
+    let config = Configuration::Client(config);
+
+    wifi.set_configuration(&config)?;
 
     wifi.start()?;
 
-    info!("Starting wifi...");
+    let started = {
+        let timeout = Duration::from_secs(20);
+        let matcher = || wifi.is_started().unwrap();
+        WifiWait::new(&sys_loop)?.wait_with_timeout(timeout, matcher)
+    };
 
-    if !WifiWait::new(&sys_loop)?
-        .wait_with_timeout(Duration::from_secs(20), || wifi.is_started().unwrap())
-    {
+    if !started {
         bail!("Wifi did not start");
     }
-
-    info!("Connecting wifi...");
 
     wifi.connect()?;
 
@@ -91,7 +81,7 @@ pub fn wifi(ssid: &str, psk: &str) -> anyhow::Result<Wifi<'static>> {
 
     let ip_info = wifi.sta_netif().get_ip_info()?;
 
-    info!("Wifi DHCP info: {:?}", ip_info);
+    log::info!("Wifi DHCP info: {:?}", ip_info);
 
     let wifi = Wifi { esp_wifi: wifi };
 
