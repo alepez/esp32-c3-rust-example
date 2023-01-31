@@ -1,13 +1,33 @@
+use std::{
+    ffi::c_void,
+    ptr::{null, null_mut},
+};
+use std::cell::RefCell;
+
 use esp_idf_sys::{
     esp, rmt_config, rmt_config_t, rmt_config_t__bindgen_ty_1, rmt_driver_install,
     rmt_get_counter_clock, rmt_item32_t, rmt_item32_t__bindgen_ty_1,
     rmt_item32_t__bindgen_ty_1__bindgen_ty_1, rmt_mode_t_RMT_MODE_TX, rmt_translator_init,
     rmt_tx_config_t, rmt_wait_tx_done, rmt_write_sample, u_int8_t,
 };
-use std::{
-    ffi::c_void,
-    ptr::{null, null_mut},
-};
+
+pub struct RgbLed(RefCell<WS2812RMT>);
+
+pub struct RgbLedColor {
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+}
+
+impl RgbLed {
+    pub fn new() -> Self {
+        Self(RefCell::new(WS2812RMT::new().unwrap()))
+    }
+
+    pub fn set_color(&self, color: RgbLedColor) {
+        self.0.borrow_mut().set_color(color.r, color.g, color.b).ok();
+    }
+}
 
 const WS2812_T0H_NS: u32 = 350;
 const WS2812_T0L_NS: u32 = 1000;

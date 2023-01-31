@@ -1,6 +1,5 @@
 use std::time::Duration;
-
-use m5stamp_c3_pal::{RgbLed, RgbLedColor};
+use crate::drivers::rgb_led::{RgbLed, RgbLedColor};
 
 #[allow(dead_code)]
 pub struct App<'a> {

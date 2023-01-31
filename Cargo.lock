@@ -932,21 +932,8 @@ dependencies = [
  "esp-idf-svc",
  "esp-idf-sys",
  "log",
- "m5stamp-c3-pal",
  "rgb",
  "toml-cfg",
-]
-
-[[package]]
-name = "m5stamp-c3-pal"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "embedded-svc",
- "esp-idf-hal",
- "esp-idf-svc",
- "esp-idf-sys",
- "log",
 ]
 
 [[package]]

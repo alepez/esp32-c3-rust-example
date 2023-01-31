@@ -2,10 +2,12 @@ use std::time::Duration;
 
 use esp_idf_sys as _;
 use log::*;
-use m5stamp_c3_pal::RgbLed;
+
+use crate::drivers::rgb_led::RgbLed;
 
 mod application;
 mod esp_wifi;
+mod drivers;
 
 #[toml_cfg::toml_config]
 pub struct Config {
@@ -23,7 +25,7 @@ fn main() -> anyhow::Result<()> {
 
     info!("Starting");
 
-    let wifi = esp_wifi::wifi(&app_config.wifi_ssid, &app_config.wifi_psk).expect("Cannot setup wifi");
+    let _wifi = esp_wifi::wifi(&app_config.wifi_ssid, &app_config.wifi_psk).expect("Cannot setup wifi");
 
     let led = RgbLed::new();
 
