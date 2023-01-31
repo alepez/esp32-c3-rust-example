@@ -5,14 +5,12 @@ use log::*;
 
 use m5stamp_c3_example::application::App;
 use m5stamp_c3_example::drivers::rgb_led::RgbLed;
-use m5stamp_c3_example::drivers::wifi::Wifi;
+use m5stamp_c3_example::drivers::wifi::{Wifi, WifiConfig};
 
 #[toml_cfg::toml_config]
 pub struct Config {
-    #[default("")]
-    wifi_ssid: &'static str,
-    #[default("")]
-    wifi_psk: &'static str,
+    #[default(WifiConfig::default())]
+    wifi: WifiConfig<'static>,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -23,7 +21,7 @@ fn main() -> anyhow::Result<()> {
 
     info!("Starting");
 
-    let _wifi = Wifi::new(&app_config.wifi_ssid, &app_config.wifi_psk).expect("Cannot setup wifi");
+    let _wifi = Wifi::new(app_config.wifi).expect("Cannot setup wifi");
 
     let led = RgbLed::new();
 

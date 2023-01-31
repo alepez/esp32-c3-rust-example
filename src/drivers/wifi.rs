@@ -14,47 +14,58 @@ pub struct Wifi {
     _esp_wifi: EspWifi<'static>,
 }
 
-impl Wifi {
-    pub fn new(ssid: &str, psk: &str) -> anyhow::Result<Wifi> {
+pub struct WifiConfig<'a> {
+    ssid: &'a str,
+    password: &'a str,
+}
+
+impl WifiConfig<'_> {
+    pub const fn default() -> Self {
+        Self {
+            ssid: "",
+            password: "",
+        }
+    }
+}
+
+impl TryInto<Configuration> for WifiConfig<'_> {
+    type Error = anyhow::Error;
+
+    fn try_into(self) -> anyhow::Result<Configuration> {
+        let Self { ssid, password } = self;
+
         let mut auth_method = AuthMethod::WPA2Personal;
 
         if ssid.is_empty() {
             bail!("missing WiFi name")
         }
 
-        if psk.is_empty() {
+        if password.is_empty() {
             auth_method = AuthMethod::None;
             log::info!("Wifi password is empty");
         }
 
+        let config = ClientConfiguration {
+            ssid: ssid.into(),
+            password: password.into(),
+            channel: Default::default(),
+            auth_method,
+            ..Default::default()
+        };
+
+        Ok(Configuration::Client(config))
+    }
+}
+
+impl Wifi {
+    pub fn new(config: WifiConfig) -> anyhow::Result<Wifi> {
         let peripherals = Peripherals::take().unwrap();
         let sys_loop = EspSystemEventLoop::take().unwrap();
         let nvs = EspDefaultNvsPartition::take().unwrap();
 
         let mut wifi = EspWifi::new(peripherals.modem, sys_loop.clone(), Some(nvs))?;
-
-        log::info!("Searching for Wifi network {}", ssid);
-
-        let ap_infos = wifi.scan()?;
-
-        let ours = ap_infos.into_iter().find(|a| a.ssid == ssid);
-
-        let channel = ours.map(|x| x.channel);
-
-        log::info!("setting Wifi configuration");
-
-        let config = ClientConfiguration {
-            ssid: ssid.into(),
-            password: psk.into(),
-            channel,
-            auth_method,
-            ..Default::default()
-        };
-
-        let config = Configuration::Client(config);
-
+        let config = config.try_into()?;
         wifi.set_configuration(&config)?;
-
         wifi.start()?;
 
         let started = {
