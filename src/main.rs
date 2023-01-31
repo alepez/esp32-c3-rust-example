@@ -4,9 +4,9 @@ use esp_idf_sys as _;
 use log::*;
 
 use crate::drivers::rgb_led::RgbLed;
+use crate::drivers::wifi::Wifi;
 
 mod application;
-mod esp_wifi;
 mod drivers;
 
 #[toml_cfg::toml_config]
@@ -25,7 +25,7 @@ fn main() -> anyhow::Result<()> {
 
     info!("Starting");
 
-    let _wifi = esp_wifi::wifi(&app_config.wifi_ssid, &app_config.wifi_psk).expect("Cannot setup wifi");
+    let _wifi = Wifi::new(&app_config.wifi_ssid, &app_config.wifi_psk).expect("Cannot setup wifi");
 
     let led = RgbLed::new();
 
