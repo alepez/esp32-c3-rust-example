@@ -31,7 +31,7 @@ struct LedController<'a> {
 
 impl<'a> LedController<'a> {
     pub fn update(&mut self) {
-        let now = self.platform.sys_time.now();
+        let now = esp_idf_svc::systime::EspSystemTime.now();
         let hue = time_to_hue(now, Duration::from_secs(10));
         let color = huw_to_color(hue);
         self.platform.led.set_color(color);
