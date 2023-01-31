@@ -69,13 +69,17 @@ pub fn wifi(ssid: &str, psk: &str) -> anyhow::Result<Wifi<'static>> {
 
     wifi.connect()?;
 
-    if !EspNetifWait::new::<EspNetif>(wifi.sta_netif(), &sys_loop)?.wait_with_timeout(
-        Duration::from_secs(20),
-        || {
+    let is_connected = {
+        let timeout = Duration::from_secs(20);
+        let matcher = || {
             wifi.driver().is_connected().unwrap()
                 && wifi.sta_netif().get_ip_info().unwrap().ip != Ipv4Addr::new(0, 0, 0, 0)
-        },
-    ) {
+        };
+        EspNetifWait::new::<EspNetif>(wifi.sta_netif(), &sys_loop)?
+            .wait_with_timeout(timeout, matcher)
+    };
+
+    if !is_connected {
         bail!("Wifi did not connect or did not receive a DHCP lease");
     }
 
