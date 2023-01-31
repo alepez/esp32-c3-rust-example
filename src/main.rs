@@ -4,6 +4,8 @@ use log::*;
 use pal::Platform;
 use pal::WifiConfig;
 
+mod application;
+
 #[toml_cfg::toml_config]
 pub struct Config {
     #[default("")]
